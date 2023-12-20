@@ -9,6 +9,8 @@ composer.json add to the following lines
     ],
 
 ``` 
+
+``` 
 composer require esim/esim-core-client-sdk-php@1.0.0
 ``` 
 
