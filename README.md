@@ -1,4 +1,13 @@
 ## Installation
+composer.json add to the following lines
+``` 
+"repositories": [
+        {
+            "url": "git@github.com:Teknasyon/esim-core-client-sdk-php.git",
+            "type": "git"
+        }
+    ],
+
 ``` 
 composer require esim/esim-core-client-sdk-php@1.0.0
 ``` 
