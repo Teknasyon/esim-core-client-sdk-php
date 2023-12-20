@@ -1,0 +1,14 @@
+parameters:
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  Esim\eSIMCoreClient\Service\eSIMCoreService:
+    arguments:
+      $eSIMCoreClient: '@eSIM_core_client'
+      $baseUri: '%env(ESIM_CORE_BASE_URL)%'
+      $apiKey: '%env(ESIM_CORE_API_KEY)%'
+      $secretKey: '%env(ESIM_CORE_API_SECRET)%'
