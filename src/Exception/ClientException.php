@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Exception;
+namespace eSIM\eSIMCoreClient\Exception;
 
-use Esim\eSIMCoreClient\Enum\Error;
+use eSIM\eSIMCoreClient\Enum\Error;
 use Exception;
 
 class ClientException extends Exception

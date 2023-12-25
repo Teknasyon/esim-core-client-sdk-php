@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Schema;
+namespace eSIM\eSIMCoreClient\Dto\Schema;
 
 class Price
 {

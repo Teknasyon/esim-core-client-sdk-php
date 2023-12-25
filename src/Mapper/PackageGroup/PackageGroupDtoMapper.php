@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Mapper\PackageGroup;
+namespace eSIM\eSIMCoreClient\Mapper\PackageGroup;
 
-use Esim\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
+use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
 
 class PackageGroupDtoMapper
 {

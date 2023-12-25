@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Mapper\Package;
+namespace eSIM\eSIMCoreClient\Mapper\Package;
 
-use Esim\eSIMCoreClient\Dto\Response\Order\BalanceDto;
+use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
 
 class BalanceDtoMapper
 {

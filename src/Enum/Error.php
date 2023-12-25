@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Enum;
+namespace eSIM\eSIMCoreClient\Enum;
 
 enum Error: int
 {

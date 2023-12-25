@@ -6,7 +6,7 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-  Esim\eSIMCoreClient\Service\eSIMCoreService:
+  eSIM\eSIMCoreClient\Service\eSIMCoreService:
     arguments:
       $eSIMCoreClient: '@eSIM_core_client'
       $baseUri: '%env(ESIM_CORE_BASE_URL)%'

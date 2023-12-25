@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Response\PackageGroup;
+namespace eSIM\eSIMCoreClient\Dto\Response\PackageGroup;
 
 class PackageGroupDto
 {

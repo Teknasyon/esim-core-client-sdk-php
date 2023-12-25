@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Mapper\Order;
+namespace eSIM\eSIMCoreClient\Mapper\Order;
 
-use Esim\eSIMCoreClient\Dto\Response\Order\OrderDto;
+use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 
 class OrderDtoMapper
 {

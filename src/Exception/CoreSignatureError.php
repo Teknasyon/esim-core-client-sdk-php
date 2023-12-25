@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Exception;
+namespace eSIM\eSIMCoreClient\Exception;
 
 use Exception;
 

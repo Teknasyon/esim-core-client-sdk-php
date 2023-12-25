@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Request;
+namespace eSIM\eSIMCoreClient\Dto\Request;
 
 abstract class BaseRequest
 {
@@ -35,6 +35,12 @@ abstract class BaseRequest
      * @example Europe/Istanbul
      */
     private ?string $timezone = null;
+
+    /**
+     * @var string|null
+     * @example TRT
+     */
+    private ?string $currency = null;
 
     /**
      * @return string
@@ -123,6 +129,24 @@ abstract class BaseRequest
     public function setTimezone(?string $timezone): BaseRequest
     {
         $this->timezone = $timezone;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrency(): ?string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string|null $currency
+     * @return $this
+     */
+    public function setCurrency(?string $currency): BaseRequest
+    {
+        $this->currency = $currency;
         return $this;
     }
 }

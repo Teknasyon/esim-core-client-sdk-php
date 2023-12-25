@@ -1,13 +1,13 @@
 <?php
 
-namespace Esim\eSIMCoreClient\DependencyInjection;
+namespace eSIM\eSIMCoreClient\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
-class eSimExtension extends Extension
+class eSIMExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
