@@ -20,7 +20,7 @@ composer require esim/esim-core-client-sdk-php@1.0.0
 ``` 
 return [
     ...
-    eSIM\eSIMCoreClient\eSimCoreBundle::class => ['all' => true],
+    eSIM\eSIMCoreClient\eSIMCoreBundle::class => ['all' => true],
     ...
 ];
 ```

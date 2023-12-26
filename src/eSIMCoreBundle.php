@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @finalsince 3.9.0
  */
-class eSimCoreBundle extends Bundle
+class eSIMCoreBundle extends Bundle
 {
     public function getPath(): string
     {
