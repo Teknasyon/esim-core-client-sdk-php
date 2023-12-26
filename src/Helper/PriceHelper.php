@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Helper;
+namespace eSIM\eSIMCoreClient\Helper;
 
-use Esim\eSIMCoreClient\Dto\Schema\Price;
+use eSIM\eSIMCoreClient\Dto\Schema\Price;
 
 class PriceHelper
 {

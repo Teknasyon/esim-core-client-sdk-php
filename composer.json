@@ -1,11 +1,23 @@
 {
     "name": "esim/esim-core-client-sdk-php",
-    "description": "Symfony package for Esim core Service.",
+    "description": "Symfony package for eSIM Core Service.",
     "license": "MIT",
     "authors": [
         {
             "name": "Uğur Yıldız",
             "email": "uguryildiz@teknasyon.com"
+        },
+        {
+            "name": "Salih Başak",
+            "email": "salihbasak@teknasyon.com"
+        },
+        {
+            "name": "Hakan Türksoy",
+            "email": "hakanturksoy@teknasyon.com"
+        },
+        {
+            "name": "Engin Meral",
+            "email": "enginmeral@teknasyon.com"
         }
     ],
     "minimum-stability": "dev",
@@ -15,13 +27,13 @@
     "autoload": {
         "classmap": ["tests/"],
         "psr-4": {
-            "Esim\\eSIMCoreClient\\": "src/"
+            "eSIM\\eSIMCoreClient\\": "src/"
         }
     },
     "autoload-dev": {
         "classmap": ["tests/"],
         "psr-4": {
-            "Esim\\eSIMCoreClient\\Tests\\": "tests/"
+            "eSIM\\eSIMCoreClient\\Tests\\": "tests/"
         }
     },
     "require-dev": {

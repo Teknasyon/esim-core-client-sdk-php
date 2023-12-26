@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Trait;
+namespace eSIM\eSIMCoreClient\Trait;
 
 trait ToJSON
 {

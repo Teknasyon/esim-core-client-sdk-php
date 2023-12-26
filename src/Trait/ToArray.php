@@ -1,8 +1,8 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Trait;
+namespace eSIM\eSIMCoreClient\Trait;
 
-use Esim\eSIMCoreClient\Helper\DateHelper;
+use eSIM\eSIMCoreClient\Helper\DateHelper;
 use ReflectionClass;
 use function Symfony\Component\String\u;
 

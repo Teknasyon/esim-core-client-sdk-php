@@ -1,28 +1,29 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Service;
+namespace eSIM\eSIMCoreClient\Service;
 
-use Esim\eSIMCoreClient\Dto\Request\BalanceRequest;
-use Esim\eSIMCoreClient\Dto\Request\CreateOrderRequest;
-use Esim\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
-use Esim\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
-use Esim\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
-use Esim\eSIMCoreClient\Dto\Request\SignatureDto;
-use Esim\eSIMCoreClient\Dto\Response\Order\BalanceDto;
-use Esim\eSIMCoreClient\Dto\Response\Order\OrderDto;
-use Esim\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
-use Esim\eSIMCoreClient\Dto\Response\Package\PackageDto;
-use Esim\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
-use Esim\eSIMCoreClient\Enum\Headers;
-use Esim\eSIMCoreClient\Exception\ClientException;
-use Esim\eSIMCoreClient\Exception\CoreSignatureError;
-use Esim\eSIMCoreClient\Exception\ResourceNotFoundException;
-use Esim\eSIMCoreClient\Helper\SignatureHelper;
-use Esim\eSIMCoreClient\Mapper\Order\OrderDtoMapper;
-use Esim\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
-use Esim\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
-use Esim\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
-use Esim\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
+use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
+use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
+use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
+use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
+use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
+use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
+use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
+use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
+use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDto;
+use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
+use eSIM\eSIMCoreClient\Enum\Headers;
+use eSIM\eSIMCoreClient\Exception\ClientException;
+use eSIM\eSIMCoreClient\Exception\CoreSignatureError;
+use eSIM\eSIMCoreClient\Exception\ResourceNotFoundException;
+use eSIM\eSIMCoreClient\Helper\SignatureHelper;
+use eSIM\eSIMCoreClient\Mapper\Order\OrderDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -57,15 +58,7 @@ class eSIMCoreService
     public function getPackagesByFootprintCode(PackagesByFootprintCodeRequest $packagesByFootprintCodeRequest): array
     {
         try {
-            $headers = [
-                Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-                Headers::CLIENT_COUNTRY->value => $packagesByFootprintCodeRequest->getCountry(),
-                Headers::CLIENT_LANGUAGE->value => $packagesByFootprintCodeRequest->getLanguage(),
-                Headers::CLIENT_IP->value => $packagesByFootprintCodeRequest->getIp(),
-                Headers::CORRELATION_ID->value => $packagesByFootprintCodeRequest->getCorrelationId(),
-                Headers::CLIENT_TIMEZONE->value => $packagesByFootprintCodeRequest->getTimezone(),
-                Headers::TOKEN->value => $this->apiKey,
-            ];
+            $headers = $this->getHeaders($packagesByFootprintCodeRequest);
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()))
@@ -104,15 +97,7 @@ class eSIMCoreService
     public function getPackageGroups(PackageGroupsRequest $packageGroupsRequest): array
     {
         try {
-            $headers = [
-                Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-                Headers::CLIENT_COUNTRY->value => $packageGroupsRequest->getCountry(),
-                Headers::CLIENT_LANGUAGE->value => $packageGroupsRequest->getLanguage(),
-                Headers::CLIENT_IP->value => $packageGroupsRequest->getIp(),
-                Headers::CORRELATION_ID->value => $packageGroupsRequest->getCorrelationId(),
-                Headers::CLIENT_TIMEZONE->value => $packageGroupsRequest->getTimezone(),
-                Headers::TOKEN->value => $this->apiKey,
-            ];
+            $headers = $this->getHeaders($packageGroupsRequest);
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::PACKAGE_GROUPS_ROUTE)
@@ -151,15 +136,7 @@ class eSIMCoreService
     public function getPackageDetailsByCode(PackageDetailsByPackageCodeRequest $packageDetailsByPackageCodeRequest): PackageDetailsDto
     {
         try {
-            $headers = [
-                Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-                Headers::CLIENT_COUNTRY->value => $packageDetailsByPackageCodeRequest->getCountry(),
-                Headers::CLIENT_LANGUAGE->value => $packageDetailsByPackageCodeRequest->getLanguage(),
-                Headers::CLIENT_IP->value => $packageDetailsByPackageCodeRequest->getIp(),
-                Headers::CORRELATION_ID->value => $packageDetailsByPackageCodeRequest->getCorrelationId(),
-                Headers::CLIENT_TIMEZONE->value => $packageDetailsByPackageCodeRequest->getTimezone(),
-                Headers::TOKEN->value => $this->apiKey,
-            ];
+            $headers = $this->getHeaders($packageDetailsByPackageCodeRequest);
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()))
@@ -190,15 +167,7 @@ class eSIMCoreService
     public function postCreateOrder(CreateOrderRequest $createOrderRequest): OrderDto
     {
         try {
-            $headers = [
-                Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-                Headers::CLIENT_COUNTRY->value => $createOrderRequest->getCountry(),
-                Headers::CLIENT_LANGUAGE->value => $createOrderRequest->getLanguage(),
-                Headers::CLIENT_IP->value => $createOrderRequest->getIp(),
-                Headers::CORRELATION_ID->value => $createOrderRequest->getCorrelationId(),
-                Headers::CLIENT_TIMEZONE->value => $createOrderRequest->getTimezone(),
-                Headers::TOKEN->value => $this->apiKey,
-            ];
+            $headers = $this->getHeaders($createOrderRequest);
 
             $payload = [
                 'packageCode' => $createOrderRequest->getPackageCode(),
@@ -242,15 +211,7 @@ class eSIMCoreService
     public function getBalance(BalanceRequest $balanceRequest): ?BalanceDto
     {
         try {
-            $headers = [
-                Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-                Headers::CLIENT_COUNTRY->value => $balanceRequest->getCountry(),
-                Headers::CLIENT_LANGUAGE->value => $balanceRequest->getLanguage(),
-                Headers::CLIENT_IP->value => $balanceRequest->getIp(),
-                Headers::CORRELATION_ID->value => $balanceRequest->getCorrelationId(),
-                Headers::CLIENT_TIMEZONE->value => $balanceRequest->getTimezone(),
-                Headers::TOKEN->value => $this->apiKey,
-            ];
+            $headers = $this->getHeaders($balanceRequest);
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::BALANCE_ROUTE, $balanceRequest->getTrackingNumber()))
@@ -298,5 +259,23 @@ class eSIMCoreService
         ) {
             throw new CoreSignatureError('Signature not match: ' . $signature . ', Calculate Signature: ' . $calculateSignature);
         }
+    }
+
+    private function getHeaders(BaseRequest $request): array
+    {
+        $headers = [
+            Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
+            Headers::CLIENT_COUNTRY->value => $request->getCountry(),
+            Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
+            Headers::CLIENT_IP->value => $request->getIp(),
+            Headers::CORRELATION_ID->value => $request->getCorrelationId(),
+            Headers::CLIENT_TIMEZONE->value => $request->getTimezone(),
+            Headers::TOKEN->value => $this->apiKey,
+        ];
+
+        if (!is_null($request->getCurrency())) {
+            $headers[Headers::CURRENCY->value] = $request->getCurrency();
+        }
+        return $headers;
     }
 }

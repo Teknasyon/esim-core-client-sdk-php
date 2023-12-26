@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Response\Order;
+namespace eSIM\eSIMCoreClient\Dto\Response\Order;
 
 class OrderDto
 {

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Esim\eSIMCoreClient;
+namespace eSIM\eSIMCoreClient;
 
-use Esim\eSIMCoreClient\DependencyInjection\eSimExtension;
+use eSIM\eSIMCoreClient\DependencyInjection\eSIMExtension;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,6 +30,6 @@ class eSimCoreBundle extends Bundle
 
     public function getContainerExtension(): ?ExtensionInterface
     {
-        return new eSimExtension();
+        return new eSIMExtension();
     }
 }

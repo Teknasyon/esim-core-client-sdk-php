@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Dto\Request;
+namespace eSIM\eSIMCoreClient\Dto\Request;
 
 use App\Trait\ToArray;
 use App\Trait\ToJSON;

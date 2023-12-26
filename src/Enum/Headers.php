@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Enum;
+namespace eSIM\eSIMCoreClient\Enum;
 
 enum Headers: string
 {
@@ -12,4 +12,5 @@ enum Headers: string
     case CLIENT_IP = 'X-Client-Ip';
     case CORRELATION_ID = 'X-Correlation-Id';
     case CLIENT_TIMEZONE = 'X-Client-Timezone';
+    case CURRENCY = 'X-Currency';
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Mapper\Package;
+namespace eSIM\eSIMCoreClient\Mapper\Package;
 
-use Esim\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
-use Esim\eSIMCoreClient\Helper\PriceHelper;
+use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
+use eSIM\eSIMCoreClient\Helper\PriceHelper;
 
 class PackageDetailsDtoMapper
 {

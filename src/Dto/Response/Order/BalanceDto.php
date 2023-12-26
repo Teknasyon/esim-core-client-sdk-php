@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Response\Order;
+namespace eSIM\eSIMCoreClient\Dto\Response\Order;
 
-use Esim\eSIMCoreClient\Trait\ToArray;
-use Esim\eSIMCoreClient\Trait\ToJSON;
+use eSIM\eSIMCoreClient\Trait\ToArray;
+use eSIM\eSIMCoreClient\Trait\ToJSON;
 
 class BalanceDto
 {

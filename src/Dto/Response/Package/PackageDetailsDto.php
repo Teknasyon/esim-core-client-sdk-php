@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Response\Package;
+namespace eSIM\eSIMCoreClient\Dto\Response\Package;
 
-use Esim\eSIMCoreClient\Dto\Schema\Price;
+use eSIM\eSIMCoreClient\Dto\Schema\Price;
 
 class PackageDetailsDto
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Esim\eSIMCoreClient\Dto\Request;
+namespace eSIM\eSIMCoreClient\Dto\Request;
 
 class BalanceRequest extends BaseRequest
 {

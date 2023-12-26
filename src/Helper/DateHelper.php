@@ -1,6 +1,6 @@
 <?php
 
-namespace Esim\eSIMCoreClient\Helper;
+namespace eSIM\eSIMCoreClient\Helper;
 
 use DateTime;
 use DateTimeInterface;
