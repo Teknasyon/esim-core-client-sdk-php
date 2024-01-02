@@ -2,6 +2,7 @@
 
 namespace eSIM\eSIMCoreClient\Service;
 
+use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
@@ -39,6 +40,7 @@ class eSIMCoreService
     const PACKAGES_DETAILS_BY_CODE_ROUTE = '/packages/%s/details';
     const CREATE_ORDER_ROUTE = '/order';
     const BALANCE_ROUTE = '/order/%s/balance';
+    const ACTIVATE_ROUTE = '/order/%s/activate';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -237,6 +239,33 @@ class eSIMCoreService
 
             return $balance;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function patchActivateOrder(ActivateOrderRequest $activateOrderRequest): bool
+    {
+        try {
+            $headers = $this->getHeaders($activateOrderRequest);
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()))
+                ->setHeaders($headers);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_PATCH,
+                sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()),
+                [
+                    'headers' => $headers
+                ]
+            );
+
+            return $response->getStatusCode() == 204;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
     }
