@@ -319,9 +319,7 @@ class eSIMCoreService
         try {
             $headers = $this->getHeaders($orderStatusCheckBulkRequest);
 
-            $payload = [
-                'orders' => $orderStatusCheckBulkRequest->getOrders(),
-            ];
+            $payload = $orderStatusCheckBulkRequest->toArray();
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::CREATE_ORDER_ROUTE)
@@ -331,7 +329,7 @@ class eSIMCoreService
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
-                self::CREATE_ORDER_ROUTE,
+                self::ORDER_STATUS_CHECK_BULK_ROUTE,
                 [
                     'headers' => $headers,
                     'json' => $payload
