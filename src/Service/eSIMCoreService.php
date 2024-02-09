@@ -6,6 +6,7 @@ use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
@@ -40,6 +41,7 @@ class eSIMCoreService
     const PACKAGES_DETAILS_BY_CODE_ROUTE = '/packages/%s/details';
     const CREATE_ORDER_ROUTE = '/order';
     const BALANCE_ROUTE = '/order/%s/balance';
+    const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
     const ACTIVATE_ROUTE = '/order/%s/activate';
     const CONTENT_TYPE = 'application/json';
 
@@ -306,5 +308,43 @@ class eSIMCoreService
             $headers[Headers::CURRENCY->value] = $request->getCurrency();
         }
         return $headers;
+    }
+
+    /**
+     * @throws ClientException
+     * @throws ResourceNotFoundException
+     */
+    public function checkOrderStatusBulk(OrderStatusCheckBulkRequest $orderStatusCheckBulkRequest): void
+    {
+        try {
+            $headers = $this->getHeaders($orderStatusCheckBulkRequest);
+
+            $payload = [
+                'orders' => $orderStatusCheckBulkRequest->getOrders(),
+            ];
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::CREATE_ORDER_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                self::CREATE_ORDER_ROUTE,
+                [
+                    'headers' => $headers,
+                    'json' => $payload
+                ]
+            );
+
+            $createOrderResult = $response->toArray()['result'] ?? null;
+            if (empty($createOrderResult)) {
+                throw new ResourceNotFoundException();
+            }
+            return;
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
     }
 }
