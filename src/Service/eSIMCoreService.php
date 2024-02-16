@@ -273,6 +273,38 @@ class eSIMCoreService
     }
 
     /**
+     * @throws ClientException
+     * @throws ResourceNotFoundException
+     */
+    public function checkOrderStatusBulk(OrderStatusCheckBulkRequest $orderStatusCheckBulkRequest): bool
+    {
+        try {
+            $headers = $this->getHeaders($orderStatusCheckBulkRequest);
+
+            $payload = $orderStatusCheckBulkRequest->toArray();
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::ORDER_STATUS_CHECK_BULK_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                self::ORDER_STATUS_CHECK_BULK_ROUTE,
+                [
+                    'headers' => $headers,
+                    'json' => $payload
+                ]
+            );
+
+            return $response->getStatusCode() == 200;
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
      * @param array $signatureArray
      * @param string|null $signature
      * @return void
@@ -308,41 +340,5 @@ class eSIMCoreService
             $headers[Headers::CURRENCY->value] = $request->getCurrency();
         }
         return $headers;
-    }
-
-    /**
-     * @throws ClientException
-     * @throws ResourceNotFoundException
-     */
-    public function checkOrderStatusBulk(OrderStatusCheckBulkRequest $orderStatusCheckBulkRequest): void
-    {
-        try {
-            $headers = $this->getHeaders($orderStatusCheckBulkRequest);
-
-            $payload = $orderStatusCheckBulkRequest->toArray();
-
-            $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::ORDER_STATUS_CHECK_BULK_ROUTE)
-                ->setHeaders($headers)
-                ->setPayload($payload);
-
-            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
-            $response = $this->eSIMCoreClient->request(
-                Request::METHOD_POST,
-                self::ORDER_STATUS_CHECK_BULK_ROUTE,
-                [
-                    'headers' => $headers,
-                    'json' => $payload
-                ]
-            );
-
-            $createOrderResult = $response->toArray()['result'] ?? null;
-            if (empty($createOrderResult)) {
-                throw new ResourceNotFoundException();
-            }
-            return;
-        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
-            throw new ClientException($exception->getMessage(), $exception->getCode());
-        }
     }
 }
