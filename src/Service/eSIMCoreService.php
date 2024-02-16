@@ -314,7 +314,7 @@ class eSIMCoreService
      * @throws ClientException
      * @throws ResourceNotFoundException
      */
-    public function checkOrderStatusBulk(OrderStatusCheckBulkRequest $orderStatusCheckBulkRequest): void
+    public function checkOrderStatusBulk(OrderStatusCheckBulkRequest $orderStatusCheckBulkRequest): bool
     {
         try {
             $headers = $this->getHeaders($orderStatusCheckBulkRequest);
@@ -336,11 +336,7 @@ class eSIMCoreService
                 ]
             );
 
-            $createOrderResult = $response->toArray()['result'] ?? null;
-            if (empty($createOrderResult)) {
-                throw new ResourceNotFoundException();
-            }
-            return;
+            return $response->getStatusCode() == 200;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
