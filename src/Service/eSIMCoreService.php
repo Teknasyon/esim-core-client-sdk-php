@@ -4,6 +4,7 @@ namespace eSIM\eSIMCoreClient\Service;
 
 use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
 use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
@@ -41,8 +42,9 @@ class eSIMCoreService
     const PACKAGES_DETAILS_BY_CODE_ROUTE = '/packages/%s/details';
     const CREATE_ORDER_ROUTE = '/order';
     const BALANCE_ROUTE = '/order/%s/balance';
-    const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
     const ACTIVATE_ROUTE = '/order/%s/activate';
+    const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
+    const CANCEL_ROUTE = '/order/%s/cancel';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -300,6 +302,33 @@ class eSIMCoreService
 
             return $response->getStatusCode() == 200;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function patchCancelOrder(CancelOrderRequest $cancelOrderRequest): bool
+    {
+        try {
+            $headers = $this->getHeaders($cancelOrderRequest);
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()))
+                ->setHeaders($headers);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_PATCH,
+                sprintf(self::ACTIVATE_ROUTE, $cancelOrderRequest->getTrackingNumber()),
+                [
+                    'headers' => $headers
+                ]
+            );
+
+            return $response->getStatusCode() == 204;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
     }

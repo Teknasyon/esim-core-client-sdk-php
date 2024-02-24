@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Request;
 
-use eSIM\eSIMCoreClient\Trait\ToArray;
-use eSIM\eSIMCoreClient\Trait\ToJSON;
-
 class OrderStatusCheckBulkRequest extends BaseRequest
 {
-    use ToArray, ToJSON;
+    /**
+     * @var OrderStatusCheckDto[]
+     */
     private array $orders;
 
     public static function builder(): static
@@ -17,18 +16,26 @@ class OrderStatusCheckBulkRequest extends BaseRequest
         return new static();
     }
 
+    /**
+     * @return OrderStatusCheckDto[]
+     */
     public function getOrders(): array
     {
         return $this->orders;
     }
 
-    public function setOrders(array $orders): void
+    /**
+     * @param OrderStatusCheckDto[] $orders
+     * @return OrderStatusCheckBulkRequest
+     */
+    public function setOrders(array $orders): OrderStatusCheckBulkRequest
     {
         $this->orders = $orders;
+        return $this;
     }
 
-    public function addOrder(OrderStatusCheckRequest $orders): void
+    public function addOrder(OrderStatusCheckDto $order): void
     {
-        $this->orders[] = $orders;
+        $this->orders[] = $order;
     }
 }
