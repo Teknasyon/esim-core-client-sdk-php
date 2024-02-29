@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Request;
 
-
-use eSIM\eSIMCoreClient\Trait\ToArray;
-use eSIM\eSIMCoreClient\Trait\ToJSON;
-
-class OrderStatusCheckRequest extends BaseRequest
+class OrderStatusCheckDto extends BaseRequest
 {
-    use ToArray, ToJSON;
+    /**
+     * @var string
+     * @example 3868e07b-22b7-4464-96a3-2a9c31a13b76
+     */
     private string $trackingNumber;
+
+    /**
+     * @var string
+     * @example ACTIVATED
+     */
     private string $status;
+
+    /**
+     * @var string
+     * @example Y-m-d H:i:s
+     */
     private string $expirationDate;
 
     public static function builder(): static
@@ -30,9 +39,9 @@ class OrderStatusCheckRequest extends BaseRequest
 
     /**
      * @param string $trackingNumber
-     * @return OrderStatusCheckRequest
+     * @return OrderStatusCheckDto
      */
-    public function setTrackingNumber(string $trackingNumber): OrderStatusCheckRequest
+    public function setTrackingNumber(string $trackingNumber): OrderStatusCheckDto
     {
         $this->trackingNumber = $trackingNumber;
         return $this;
@@ -48,9 +57,9 @@ class OrderStatusCheckRequest extends BaseRequest
 
     /**
      * @param string $status
-     * @return OrderStatusCheckRequest
+     * @return OrderStatusCheckDto
      */
-    public function setStatus(string $status): OrderStatusCheckRequest
+    public function setStatus(string $status): OrderStatusCheckDto
     {
         $this->status = $status;
         return $this;
@@ -66,9 +75,9 @@ class OrderStatusCheckRequest extends BaseRequest
 
     /**
      * @param string $expirationDate
-     * @return OrderStatusCheckRequest
+     * @return OrderStatusCheckDto
      */
-    public function setExpirationDate(string $expirationDate): OrderStatusCheckRequest
+    public function setExpirationDate(string $expirationDate): OrderStatusCheckDto
     {
         $this->expirationDate = $expirationDate;
         return $this;
