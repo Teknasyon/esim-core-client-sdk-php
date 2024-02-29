@@ -321,7 +321,7 @@ class eSIMCoreService
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_PATCH,
-                sprintf(self::ACTIVATE_ROUTE, $cancelOrderRequest->getTrackingNumber()),
+                sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()),
                 [
                     'headers' => $headers
                 ]
