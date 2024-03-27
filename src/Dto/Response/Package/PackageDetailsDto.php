@@ -18,6 +18,8 @@ class PackageDetailsDto
     private string $provider;
     private string $code;
     private Price $price;
+    private ?string $lastActivationDate;
+
 
     public static function builder(): static
     {
@@ -201,6 +203,24 @@ class PackageDetailsDto
     public function setPrice(Price $price): PackageDetailsDto
     {
         $this->price = $price;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastActivationDate(): ?string
+    {
+        return $this->lastActivationDate;
+    }
+
+    /**
+     * @param string|null $lastActivationDate
+     * @return PackageDetailsDto
+     */
+    public function setLastActivationDate(?string $lastActivationDate): PackageDetailsDto
+    {
+        $this->lastActivationDate = $lastActivationDate;
         return $this;
     }
 }

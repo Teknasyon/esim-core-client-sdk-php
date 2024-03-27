@@ -19,6 +19,7 @@ class PackageDetailsDtoMapper
             ->setFootprintType($packageDetails['footprintType'])
             ->setProvider($packageDetails['provider'])
             ->setCode($packageDetails['code'])
+            ->setLastActivationDate($packageDetails['lastActivationDate'])
             ->setPrice(PriceHelper::createPriceSchema(
                 $packageDetails['price']['price'],
                 $packageDetails['price']['currency'],
