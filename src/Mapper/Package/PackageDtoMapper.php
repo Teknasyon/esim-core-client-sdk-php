@@ -25,6 +25,12 @@ class PackageDtoMapper
                 $package['price']['currency'],
                 $package['price']['priceText'],
                 $package['price']['currencySymbol']
-            ));
+            ))
+            ->setIsRecurring($package['isRecurring'])
+            ->setTrialData($package['trialData'])
+            ->setTrialDataUnit($package['trialDataUnit'])
+            ->setTrialDuration($package['trialDuration'])
+            ->setTrialDurationUnit($package['trialDurationUnit'])
+            ->setTrialHlrBitRate($package['trialHlrBitRate']);
     }
 }
