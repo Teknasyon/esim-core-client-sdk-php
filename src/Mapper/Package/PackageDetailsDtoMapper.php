@@ -3,6 +3,7 @@
 namespace eSIM\eSIMCoreClient\Mapper\Package;
 
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
+use eSIM\eSIMCoreClient\Enum\HLRBitRate;
 use eSIM\eSIMCoreClient\Helper\PriceHelper;
 
 class PackageDetailsDtoMapper
@@ -31,6 +32,6 @@ class PackageDetailsDtoMapper
             ->setTrialDataUnit($packageDetails['trialDataUnit'])
             ->setTrialDuration($packageDetails['trialDuration'])
             ->setTrialDurationUnit($packageDetails['trialDurationUnit'])
-            ->setTrialHlrBitRate($packageDetails['trialHlrBitRate']);
+            ->setTrialHlrBitRate($packageDetails['trialHlrBitRate'] ? HLRBitRate::from($packageDetails['trialHlrBitRate']) : null);
     }
 }
