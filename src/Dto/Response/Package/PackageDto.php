@@ -234,7 +234,7 @@ class PackageDto
     /**
      * @return bool
      */
-    public function isRecurring(): bool
+    public function getIsRecurring(): bool
     {
         return $this->isRecurring;
     }
