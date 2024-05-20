@@ -24,6 +24,12 @@ class SubscriberUpdateRequest extends BaseRequest
      */
     private string $parentTrackingNumber;
 
+    /**
+     * @var array|null
+     * @example ['customParameter1' => 'customValue1', 'customParameter2' => 'customValue2']
+     */
+    private ?array $customParams;
+
     public static function builder(): static
     {
         return new static();
@@ -80,6 +86,24 @@ class SubscriberUpdateRequest extends BaseRequest
     public function setParentTrackingNumber(string $parentTrackingNumber): SubscriberUpdateRequest
     {
         $this->parentTrackingNumber = $parentTrackingNumber;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getCustomParams(): ?array
+    {
+        return $this->customParams;
+    }
+
+    /**
+     * @param array|null $customParams
+     * @return SubscriberUpdateRequest
+     */
+    public function setCustomParams(?array $customParams): SubscriberUpdateRequest
+    {
+        $this->customParams = $customParams;
         return $this;
     }
 }
