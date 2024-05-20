@@ -19,10 +19,10 @@ class SubscriberUpdateRequest extends BaseRequest
     private string $trackingNumber;
 
     /**
-     * @var string
+     * @var string|null
      * @example 1575e07b-21b7-4364-96a3-2a9c31a13b74
      */
-    private string $parentTrackingNumber;
+    private ?string $parentTrackingNumber = null;
 
     /**
      * @var array|null
@@ -72,18 +72,18 @@ class SubscriberUpdateRequest extends BaseRequest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getParentTrackingNumber(): string
+    public function getParentTrackingNumber(): ?string
     {
         return $this->parentTrackingNumber;
     }
 
     /**
-     * @param string $parentTrackingNumber
+     * @param string|null $parentTrackingNumber
      * @return SubscriberUpdateRequest
      */
-    public function setParentTrackingNumber(string $parentTrackingNumber): SubscriberUpdateRequest
+    public function setParentTrackingNumber(?string $parentTrackingNumber): SubscriberUpdateRequest
     {
         $this->parentTrackingNumber = $parentTrackingNumber;
         return $this;
