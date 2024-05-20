@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+namespace eSIM\eSIMCoreClient\Dto\Request;
+
+class SubscriberUpdateRequest extends BaseRequest
+{
+    /**
+     * @var string
+     * @example renewal
+     */
+    private string $eventType;
+
+    /**
+     * @var string
+     * @example 3868e07b-22b7-4464-96a3-2a9c31a13b76
+     */
+    private string $trackingNumber;
+
+    /**
+     * @var string
+     * @example 1575e07b-21b7-4364-96a3-2a9c31a13b74
+     */
+    private string $parentTrackingNumber;
+
+    public static function builder(): static
+    {
+        return new static();
+    }
+
+    /**
+     * @return string
+     */
+    public function getEventType(): string
+    {
+        return $this->eventType;
+    }
+
+    /**
+     * @param string $eventType
+     * @return SubscriberUpdateRequest
+     */
+    public function setEventType(string $eventType): SubscriberUpdateRequest
+    {
+        $this->eventType = $eventType;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingNumber(): string
+    {
+        return $this->trackingNumber;
+    }
+
+    /**
+     * @param string $trackingNumber
+     * @return SubscriberUpdateRequest
+     */
+    public function setTrackingNumber(string $trackingNumber): SubscriberUpdateRequest
+    {
+        $this->trackingNumber = $trackingNumber;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentTrackingNumber(): string
+    {
+        return $this->parentTrackingNumber;
+    }
+
+    /**
+     * @param string $parentTrackingNumber
+     * @return SubscriberUpdateRequest
+     */
+    public function setParentTrackingNumber(string $parentTrackingNumber): SubscriberUpdateRequest
+    {
+        $this->parentTrackingNumber = $parentTrackingNumber;
+        return $this;
+    }
+}
