@@ -343,7 +343,12 @@ class eSIMCoreService
         try {
             $headers = $this->getHeaders($subscriberUpdateRequest);
 
-            $payload = $subscriberUpdateRequest->toArray();
+            $payload = [
+                'eventType' => $subscriberUpdateRequest->getEventType(),
+                'trackingNumber' => $subscriberUpdateRequest->getTrackingNumber(),
+                'parentTrackingNumber' => $subscriberUpdateRequest->getParentTrackingNumber(),
+                'customParams' => $subscriberUpdateRequest->getCustomParams(),
+            ];
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::SUBSCRIBER_UPDATE_ROUTE)
