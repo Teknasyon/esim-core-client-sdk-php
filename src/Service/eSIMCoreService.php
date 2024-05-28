@@ -12,6 +12,7 @@ use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
+use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
@@ -45,6 +46,7 @@ class eSIMCoreService
     const ACTIVATE_ROUTE = '/order/%s/activate';
     const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
     const CANCEL_ROUTE = '/order/%s/cancel';
+    const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -323,11 +325,47 @@ class eSIMCoreService
                 Request::METHOD_PATCH,
                 sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()),
                 [
-                    'headers' => $headers
+                    'headers' => $headers,
                 ]
             );
 
             return $response->getStatusCode() == 204;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function postSubscriberUpdate(SubscriberUpdateRequest $subscriberUpdateRequest): bool
+    {
+        try {
+            $headers = $this->getHeaders($subscriberUpdateRequest);
+
+            $payload = [
+                'eventType' => $subscriberUpdateRequest->getEventType(),
+                'trackingNumber' => $subscriberUpdateRequest->getTrackingNumber(),
+                'parentTrackingNumber' => $subscriberUpdateRequest->getParentTrackingNumber(),
+                'customParams' => $subscriberUpdateRequest->getCustomParams(),
+            ];
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::SUBSCRIBER_UPDATE_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                self::SUBSCRIBER_UPDATE_ROUTE,
+                [
+                    'headers' => $headers,
+                    'json' => $payload
+                ]
+            );
+
+            return $response->getStatusCode() == 200;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
