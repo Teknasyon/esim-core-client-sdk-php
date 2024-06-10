@@ -20,6 +20,8 @@ use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
 use eSIM\eSIMCoreClient\Enum\Headers;
 use eSIM\eSIMCoreClient\Exception\ClientException;
 use eSIM\eSIMCoreClient\Exception\CoreSignatureError;
+use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
+use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Exception\ResourceNotFoundException;
 use eSIM\eSIMCoreClient\Helper\SignatureHelper;
 use eSIM\eSIMCoreClient\Mapper\Order\OrderDtoMapper;
