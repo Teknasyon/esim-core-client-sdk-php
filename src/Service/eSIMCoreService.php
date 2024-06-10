@@ -4,15 +4,14 @@ namespace eSIM\eSIMCoreClient\Service;
 
 use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
-use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
-use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
+use eSIM\eSIMCoreClient\Dto\Request\SubscriberBalanceRequest;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
@@ -47,6 +46,7 @@ class eSIMCoreService
     const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
     const CANCEL_ROUTE = '/order/%s/cancel';
     const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
+    const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -267,6 +267,41 @@ class eSIMCoreService
                 sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()),
                 [
                     'headers' => $headers
+                ]
+            );
+
+            return $response->getStatusCode() == 204;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function postSubscriberBalance(SubscriberBalanceRequest $subscriberBalanceRequest): bool
+    {
+        try {
+            $headers = $this->getHeaders($subscriberBalanceRequest);
+
+            $payload = [
+                'transactionId' => $subscriberBalanceRequest->getTransactionId(),
+                'price' => $subscriberBalanceRequest->getPrice(),
+                'totalBalance' => $subscriberBalanceRequest->getTotalBalance(),
+            ];
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::SUBSCRIBER_BALANCE_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()),
+                [
+                    'headers' => $headers,
+                    'json' => $payload
                 ]
             );
 
