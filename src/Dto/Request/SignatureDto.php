@@ -2,8 +2,8 @@
 
 namespace eSIM\eSIMCoreClient\Dto\Request;
 
-use App\Trait\ToArray;
-use App\Trait\ToJSON;
+use eSIM\eSIMCoreClient\Trait\ToArray;
+use eSIM\eSIMCoreClient\Trait\ToJSON;
 
 class SignatureDto
 {
