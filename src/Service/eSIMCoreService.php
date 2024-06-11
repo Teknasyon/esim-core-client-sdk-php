@@ -413,8 +413,8 @@ class eSIMCoreService
     }
 
     /**
-     * @param BalanceDetailRequest $balanceRequest
-     * @return BalanceDto|null
+     * @param BalanceDetailRequest $balanceDetailRequest
+     * @return BalanceDetailDto|null
      * @throws ClientException
      */
     public function getBalanceDetail(BalanceDetailRequest $balanceDetailRequest): ?BalanceDetailDto
