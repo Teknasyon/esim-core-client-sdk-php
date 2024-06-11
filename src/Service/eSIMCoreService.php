@@ -3,6 +3,7 @@
 namespace eSIM\eSIMCoreClient\Service;
 
 use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
+use eSIM\eSIMCoreClient\Dto\Request\BalanceDetailRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
@@ -12,6 +13,7 @@ use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberBalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDetailDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
@@ -24,6 +26,7 @@ use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Exception\ResourceNotFoundException;
 use eSIM\eSIMCoreClient\Helper\SignatureHelper;
+use eSIM\eSIMCoreClient\Mapper\Order\BalanceDetailDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Order\OrderDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
@@ -44,6 +47,7 @@ class eSIMCoreService
     const PACKAGES_DETAILS_BY_CODE_ROUTE = '/packages/%s/details';
     const CREATE_ORDER_ROUTE = '/order';
     const BALANCE_ROUTE = '/order/%s/balance';
+    const BALANCE_DETAIL_ROUTE = '/order/%s/balance-detail';
     const ACTIVATE_ROUTE = '/order/%s/activate';
     const ORDER_STATUS_CHECK_BULK_ROUTE = '/order/status-check/bulk';
     const CANCEL_ROUTE = '/order/%s/cancel';
@@ -404,6 +408,44 @@ class eSIMCoreService
 
             return $response->getStatusCode() == 200;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @param BalanceDetailRequest $balanceRequest
+     * @return BalanceDto|null
+     * @throws ClientException
+     */
+    public function getBalanceDetail(BalanceDetailRequest $balanceDetailRequest): ?BalanceDetailDto
+    {
+        try {
+            $headers = $this->getHeaders($balanceDetailRequest);
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()))
+                ->setHeaders($headers);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_GET,
+                sprintf(self::BALANCE_ROUTE, $balanceDetailRequest->getTrackingNumber()),
+                [
+                    'headers' => $headers
+                ]
+            );
+
+            $balanceDetailResult = $response->toArray()['result'] ?? [];
+            $balanceDetail = null;
+
+            if (!empty($balanceDetailResult)) {
+                $balanceDetail = BalanceDetailDtoMapper::map($balanceDetailResult);
+                unset($balanceDetailResult);
+            }
+
+            return $balanceDetail;
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
     }
