@@ -297,7 +297,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::SUBSCRIBER_BALANCE_ROUTE)
+                ->setUrl($this->baseUri . sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()))
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
