@@ -17,6 +17,8 @@ class BalanceDetailDto
      */
     private array $countries;
 
+    private string $activeCountry;
+
     public static function builder(): static
     {
         return new static();
@@ -55,6 +57,24 @@ class BalanceDetailDto
     public function setCountries(array $countries): BalanceDetailDto
     {
         $this->countries = $countries;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActiveCountry(): string
+    {
+        return $this->activeCountry;
+    }
+
+    /**
+     * @param string $activeCountry
+     * @return BalanceDetailDto
+     */
+    public function setActiveCountry(string $activeCountry): BalanceDetailDto
+    {
+        $this->activeCountry = $activeCountry;
         return $this;
     }
 

@@ -16,7 +16,8 @@ class BalanceDetailDtoMapper
                     ->setData($balance['today']['data'] ?? 0)
                     ->setPrice($balance['today']['price'] ?? 0)
             )
-            ->setCountries(self::mapCountries($balance['countries'] ?? []));
+            ->setCountries(self::mapCountries($balance['countries'] ?? []))
+            ->setActiveCountry($balance['activeCountry'] ?? '');
     }
 
     public static function mapCountries(array $countries): array

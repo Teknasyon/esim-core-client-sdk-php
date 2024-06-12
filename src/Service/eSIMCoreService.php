@@ -430,7 +430,7 @@ class eSIMCoreService
 
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
-                sprintf(self::BALANCE_ROUTE, $balanceDetailRequest->getTrackingNumber()),
+                sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()),
                 [
                     'headers' => $headers
                 ]
