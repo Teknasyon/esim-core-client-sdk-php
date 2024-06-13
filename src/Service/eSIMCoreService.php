@@ -477,8 +477,8 @@ class eSIMCoreService
             Headers::CLIENT_COUNTRY->value => $request->getCountry(),
             Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
             Headers::CLIENT_IP->value => $request->getIp(),
-            Headers::CORRELATION_ID->value => $request->getCorrelationId(),
-            Headers::CLIENT_TIMEZONE->value => $request->getTimezone(),
+            Headers::CORRELATION_ID->value => $request->getCorrelationId() ?? '',
+            Headers::CLIENT_TIMEZONE->value => $request->getTimezone() ?? '',
             Headers::TOKEN->value => $this->apiKey,
         ];
 
