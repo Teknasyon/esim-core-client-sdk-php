@@ -326,7 +326,9 @@ class eSIMCoreService
         try {
             $headers = $this->getHeaders($orderStatusCheckBulkRequest);
 
-            $payload = $orderStatusCheckBulkRequest->toArray();
+            $payload = [
+                'orders' => $orderStatusCheckBulkRequest->getOrders(),
+            ];
 
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::ORDER_STATUS_CHECK_BULK_ROUTE)
