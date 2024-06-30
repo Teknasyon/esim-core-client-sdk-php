@@ -7,6 +7,7 @@ use eSIM\eSIMCoreClient\Dto\Request\BalanceDetailRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
 use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CurrentSimPackageRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
@@ -32,6 +33,7 @@ use eSIM\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\SimPackage\CurrentSimPackageDtoMapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -53,6 +55,7 @@ class eSIMCoreService
     const CANCEL_ROUTE = '/order/%s/cancel';
     const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
     const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
+    const SIM_PACKAGE_CURRENT = 'sim-package/%s/current';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -448,6 +451,38 @@ class eSIMCoreService
 
             return $balanceDetail;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    public function getCurrentSimPackage(CurrentSimPackageRequest $currentSimPackageRequest)
+    {
+
+        try {
+            $headers = $this->getHeaders($currentSimPackageRequest);
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . sprintf(self::SIM_PACKAGE_CURRENT, $currentSimPackageRequest->getTrackingNumber()))
+                ->setHeaders($headers);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_PATCH,
+                sprintf(self::SIM_PACKAGE_CURRENT, $currentSimPackageRequest->getTrackingNumber()),
+                [
+                    'headers' => $headers,
+                ]
+            );
+
+            $currentSimPackageResponse = $response->toArray()['result'] ?? [];
+            $currentSimPackage = null;
+
+            if (!empty($currentSimPackageResponse)) {
+                $currentSimPackage = CurrentSimPackageDtoMapper::map($currentSimPackageResponse);
+                unset($currentSimPackageResponse);
+            }
+
+            return $currentSimPackage;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
     }
