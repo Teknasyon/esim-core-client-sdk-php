@@ -16,6 +16,6 @@ class CurrentSimPackageDtoMapper
             ->setEndDate($currentSimPackage['endDate'])
             ->setExpiredDate($currentSimPackage['expiredDate'])
             ->setSimDetail(SimDetailHelper::createSimDetailSchema($currentSimPackage['simDetail']))
-            ->setPackageDetailDto(PackageDetailHelper::createPackageDetailSchema($currentSimPackage['package']));
+            ->setPackageDetailDto(PackageDetailHelper::createPackageDetailSchema($currentSimPackage['packageDetail']));
     }
 }
