@@ -472,7 +472,7 @@ class eSIMCoreService
                     'headers' => $headers,
                 ]
             );
-            dd($response);
+            dd($response->toArray());
             $currentSimPackageResponse = $response->toArray()['result'] ?? [];
             $currentSimPackage = null;
 
