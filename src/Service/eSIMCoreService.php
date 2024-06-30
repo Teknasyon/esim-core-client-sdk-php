@@ -466,13 +466,12 @@ class eSIMCoreService
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
             $response = $this->eSIMCoreClient->request(
-                Request::METHOD_PATCH,
+                Request::METHOD_GET,
                 sprintf(self::SIM_PACKAGE_CURRENT, $currentSimPackageRequest->getTrackingNumber()),
                 [
                     'headers' => $headers,
                 ]
             );
-            dd($response->toArray());
             $currentSimPackageResponse = $response->toArray()['result'] ?? [];
             $currentSimPackage = null;
 
