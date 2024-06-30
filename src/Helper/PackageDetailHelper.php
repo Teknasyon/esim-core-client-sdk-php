@@ -26,6 +26,13 @@ class PackageDetailHelper
                         priceText: $package['price']['priceText'],
                         currencySymbol: $package['price']['currencySymbol']
                     )
-                );
+                )
+                ->setLastActivationDate($package['lastActivationDate'])
+                ->setIsRecurring($package['isRecurring'])
+                ->setTrialData($package['trialData'])
+                ->setTrialDataUnit($package['trialDataUnit'])
+                ->setTrialDuration($package['trialDuration'])
+                ->setTrialDurationUnit($package['trialDurationUnit'])
+                ->setTrialHlrBitRate($package['trialHlrBitRate']);
     }
 }

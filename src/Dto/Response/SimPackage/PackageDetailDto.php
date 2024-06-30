@@ -2,8 +2,7 @@
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
-
-use eSIM\eSIMCoreClient\Helper\Price;
+use eSIM\eSIMCoreClient\Dto\Schema\Price;
 
 /**
  *
@@ -47,9 +46,9 @@ class PackageDetailDto
      */
     private string $code;
     /**
-     * @var \eSIM\eSIMCoreClient\Dto\Schema\Price
+     * @var Price
      */
-    private \eSIM\eSIMCoreClient\Dto\Schema\Price $price;
+    private Price $price;
     /**
      * @var string|null
      */
@@ -250,18 +249,18 @@ class PackageDetailDto
     }
 
     /**
-     * @return \eSIM\eSIMCoreClient\Dto\Schema\Price
+     * @return Price
      */
-    public function getPrice(): \eSIM\eSIMCoreClient\Dto\Schema\Price
+    public function getPrice(): Price
     {
         return $this->price;
     }
 
     /**
-     * @param \eSIM\eSIMCoreClient\Dto\Schema\Price $price
+     * @param Price $price
      * @return $this
      */
-    public function setPrice(\eSIM\eSIMCoreClient\Dto\Schema\Price $price): self
+    public function setPrice(Price $price): self
     {
         $this->price = $price;
         return $this;
