@@ -56,7 +56,7 @@ class eSIMCoreService
     const CANCEL_ROUTE = '/order/%s/cancel';
     const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
     const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
-    const SIM_PACKAGE_CURRENT_ROUTE = 'sim-package/%s/current';
+    const SIM_PACKAGE_CURRENT_ROUTE = '/sim-package/%s/current';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
