@@ -2,35 +2,38 @@
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
-/**
- *
- */
 class CurrentSimPackageDto
 {
     /**
      * @var float
      */
     private float $dataUsage;
+
     /**
      * @var string
      */
     private string $status;
+
     /**
      * @var string
      */
     private string $activatedDate;
+
     /**
      * @var string|null
      */
     private ?string $endDate;
+
     /**
      * @var string
      */
     private string $expiredDate;
+
     /**
      * @var SimDetailDto
      */
     private SimDetailDto $simDetail;
+
     /**
      * @var PackageDetailDto
      */
@@ -169,6 +172,5 @@ class CurrentSimPackageDto
         $this->packageDetailDto = $packageDetailDto;
         return $this;
     }
-
 
 }

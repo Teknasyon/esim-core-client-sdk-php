@@ -15,7 +15,7 @@ class SimDetailHelper
                 ->setSmdpAddress($simDetail['smdpAddress'])
                 ->setStatus($simDetail['status'])
                 ->setHasInstalled($simDetail['hasInstalled'])
-                ->setReamingCount($simDetail['remainingCount'])
+                ->setRemainingCount($simDetail['remainingCount'])
                 ->setLastCountry($simDetail['lastCountry']);
     }
 }
