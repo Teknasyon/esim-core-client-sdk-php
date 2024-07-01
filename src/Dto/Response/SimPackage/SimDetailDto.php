@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
@@ -9,34 +10,37 @@ class SimDetailDto
      * @var string
      */
     private string $iccid;
+
     /**
      * @var string
      */
     private string $matchingId;
+
     /**
      * @var string
      */
     private string $smdpAddress;
+
     /**
      * @var string
      */
     private string $status;
+
     /**
      * @var bool
      */
     private bool $hasInstalled;
+
     /**
      * @var int
      */
-    private int $remaining;
+    private int $remainingCount;
+
     /**
      * @var string|null
      */
     private ?string $lastCountry;
 
-    /**
-     * @return static
-     */
     public static function builder(): static
     {
         return new static();
@@ -52,9 +56,9 @@ class SimDetailDto
 
     /**
      * @param string $iccid
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setIccid(string $iccid): self
+    public function setIccid(string $iccid): SimDetailDto
     {
         $this->iccid = $iccid;
         return $this;
@@ -70,9 +74,9 @@ class SimDetailDto
 
     /**
      * @param string $matchingId
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setMatchingId(string $matchingId): self
+    public function setMatchingId(string $matchingId): SimDetailDto
     {
         $this->matchingId = $matchingId;
         return $this;
@@ -88,9 +92,9 @@ class SimDetailDto
 
     /**
      * @param string $smdpAddress
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setSmdpAddress(string $smdpAddress): self
+    public function setSmdpAddress(string $smdpAddress): SimDetailDto
     {
         $this->smdpAddress = $smdpAddress;
         return $this;
@@ -106,9 +110,9 @@ class SimDetailDto
 
     /**
      * @param string $status
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setStatus(string $status): self
+    public function setStatus(string $status): SimDetailDto
     {
         $this->status = $status;
         return $this;
@@ -124,9 +128,9 @@ class SimDetailDto
 
     /**
      * @param bool $hasInstalled
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setHasInstalled(bool $hasInstalled): self
+    public function setHasInstalled(bool $hasInstalled): SimDetailDto
     {
         $this->hasInstalled = $hasInstalled;
         return $this;
@@ -137,16 +141,16 @@ class SimDetailDto
      */
     public function getRemainingCount(): int
     {
-        return $this->remaining;
+        return $this->remainingCount;
     }
 
     /**
-     * @param int $remaining
-     * @return $this
+     * @param int $remainingCount
+     * @return SimDetailDto
      */
-    public function setRemainingCount(int $remaining): self
+    public function setRemainingCount(int $remainingCount): SimDetailDto
     {
-        $this->remaining = $remaining;
+        $this->remainingCount = $remainingCount;
         return $this;
     }
 
@@ -160,13 +164,11 @@ class SimDetailDto
 
     /**
      * @param string|null $lastCountry
-     * @return $this
+     * @return SimDetailDto
      */
-    public function setLastCountry(?string $lastCountry): self
+    public function setLastCountry(?string $lastCountry): SimDetailDto
     {
         $this->lastCountry = $lastCountry;
         return $this;
     }
-
-
 }

@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
+
 class CurrentSimPackageDto
 {
     /**
@@ -37,7 +39,7 @@ class CurrentSimPackageDto
     /**
      * @var PackageDetailDto
      */
-    private PackageDetailDto $packageDetailDto;
+    private PackageDetailDto $packageDetail;
 
     /**
      * @return static
@@ -158,19 +160,18 @@ class CurrentSimPackageDto
     /**
      * @return PackageDetailDto
      */
-    public function getPackageDetailDto(): PackageDetailDto
+    public function getPackageDetail(): PackageDetailDto
     {
-        return $this->packageDetailDto;
+        return $this->packageDetail;
     }
 
     /**
-     * @param PackageDetailDto $packageDetailDto
-     * @return self
+     * @param PackageDetailDto $packageDetail
+     * @return CurrentSimPackageDto
      */
-    public function setPackageDetailDto(PackageDetailDto $packageDetailDto): self
+    public function setPackageDetail(PackageDetailDto $packageDetail): CurrentSimPackageDto
     {
-        $this->packageDetailDto = $packageDetailDto;
+        $this->packageDetail = $packageDetail;
         return $this;
     }
-
 }

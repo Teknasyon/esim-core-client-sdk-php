@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Request;
@@ -32,9 +33,9 @@ class CurrentSimPackageRequest extends BaseRequest
 
     /**
      * @param string $trackingNumber
-     * @return self
+     * @return CurrentSimPackageRequest
      */
-    public function setTrackingNumber(string $trackingNumber): self
+    public function setTrackingNumber(string $trackingNumber): CurrentSimPackageRequest
     {
         $this->trackingNumber = $trackingNumber;
         return $this;
@@ -50,9 +51,9 @@ class CurrentSimPackageRequest extends BaseRequest
 
     /**
      * @param array|null $customParams
-     * @return self
+     * @return CurrentSimPackageRequest
      */
-    public function setCustomParams(?array $customParams): self
+    public function setCustomParams(?array $customParams): CurrentSimPackageRequest
     {
         $this->customParams = $customParams;
         return $this;

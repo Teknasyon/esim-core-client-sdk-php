@@ -22,6 +22,7 @@ use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDto;
 use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
+use eSIM\eSIMCoreClient\Dto\Response\SimPackage\CurrentSimPackageDto;
 use eSIM\eSIMCoreClient\Enum\Headers;
 use eSIM\eSIMCoreClient\Exception\ClientException;
 use eSIM\eSIMCoreClient\Exception\CoreSignatureError;
@@ -76,10 +77,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($packagesByFootprintCodeRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()),
@@ -101,23 +105,6 @@ class eSIMCoreService
         }
     }
 
-    private function getHeaders(BaseRequest $request): array
-    {
-        $headers = [
-            Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-            Headers::CLIENT_COUNTRY->value => $request->getCountry(),
-            Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
-            Headers::CLIENT_IP->value => $request->getIp(),
-            Headers::CORRELATION_ID->value => $request->getCorrelationId() ?? '',
-            Headers::CLIENT_TIMEZONE->value => $request->getTimezone() ?? '',
-            Headers::TOKEN->value => $this->apiKey,
-        ];
-        if (!is_null($request->getCurrency())) {
-            $headers[Headers::CURRENCY->value] = $request->getCurrency();
-        }
-        return $headers;
-    }
-
     /**
      * @param PackageGroupsRequest $packageGroupsRequest
      * @return array<int, PackageGroupDto>
@@ -127,10 +114,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($packageGroupsRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::PACKAGE_GROUPS_ROUTE)
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 self::PACKAGE_GROUPS_ROUTE,
@@ -161,10 +151,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($packageDetailsByPackageCodeRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()),
@@ -189,6 +182,7 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($createOrderRequest);
+
             $payload = [
                 'packageCode' => $createOrderRequest->getPackageCode(),
                 'email' => $createOrderRequest->getEmail(),
@@ -197,11 +191,14 @@ class eSIMCoreService
                 'parentOrder' => $createOrderRequest->getParentOrder(),
                 'customParams' => $createOrderRequest->getCustomParams(),
             ];
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::CREATE_ORDER_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::CREATE_ORDER_ROUTE,
@@ -229,10 +226,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($balanceRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::BALANCE_ROUTE, $balanceRequest->getTrackingNumber()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::BALANCE_ROUTE, $balanceRequest->getTrackingNumber()),
@@ -259,10 +259,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($activateOrderRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_PATCH,
                 sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()),
@@ -283,16 +286,20 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($subscriberBalanceRequest);
+
             $payload = [
                 'transactionId' => $subscriberBalanceRequest->getTransactionId(),
                 'price' => $subscriberBalanceRequest->getPrice(),
                 'totalBalance' => $subscriberBalanceRequest->getTotalBalance(),
             ];
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()))
                 ->setHeaders($headers)
                 ->setPayload($payload);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()),
@@ -315,14 +322,18 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($orderStatusCheckBulkRequest);
+
             $payload = [
                 'orders' => $orderStatusCheckBulkRequest->getOrders(),
             ];
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::ORDER_STATUS_CHECK_BULK_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::ORDER_STATUS_CHECK_BULK_ROUTE,
@@ -344,10 +355,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($cancelOrderRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_PATCH,
                 sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()),
@@ -368,17 +382,21 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($subscriberUpdateRequest);
+
             $payload = [
                 'eventType' => $subscriberUpdateRequest->getEventType(),
                 'trackingNumber' => $subscriberUpdateRequest->getTrackingNumber(),
                 'parentTrackingNumber' => $subscriberUpdateRequest->getParentTrackingNumber(),
                 'customParams' => $subscriberUpdateRequest->getCustomParams(),
             ];
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . self::SUBSCRIBER_UPDATE_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::SUBSCRIBER_UPDATE_ROUTE,
@@ -402,10 +420,13 @@ class eSIMCoreService
     {
         try {
             $headers = $this->getHeaders($balanceDetailRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()))
                 ->setHeaders($headers);
+
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()),
@@ -425,14 +446,21 @@ class eSIMCoreService
         }
     }
 
-    public function getCurrentSimPackage(CurrentSimPackageRequest $currentSimPackageRequest)
+    /**
+     * @param CurrentSimPackageRequest $currentSimPackageRequest
+     * @return CurrentSimPackageDto|null
+     * @throws ClientException
+     */
+    public function getCurrentSimPackage(CurrentSimPackageRequest $currentSimPackageRequest): ?CurrentSimPackageDto
     {
         try {
             $headers = $this->getHeaders($currentSimPackageRequest);
+
             $signatureDto = SignatureDto::builder()
                 ->setUrl($this->baseUri . sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()))
                 ->setHeaders($headers);
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()),
@@ -450,6 +478,23 @@ class eSIMCoreService
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
+    }
+
+    private function getHeaders(BaseRequest $request): array
+    {
+        $headers = [
+            Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
+            Headers::CLIENT_COUNTRY->value => $request->getCountry(),
+            Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
+            Headers::CLIENT_IP->value => $request->getIp(),
+            Headers::CORRELATION_ID->value => $request->getCorrelationId() ?? '',
+            Headers::CLIENT_TIMEZONE->value => $request->getTimezone() ?? '',
+            Headers::TOKEN->value => $this->apiKey,
+        ];
+        if (!is_null($request->getCurrency())) {
+            $headers[Headers::CURRENCY->value] = $request->getCurrency();
+        }
+        return $headers;
     }
 
     /**

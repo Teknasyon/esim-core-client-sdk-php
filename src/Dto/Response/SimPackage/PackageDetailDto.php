@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
@@ -11,74 +12,87 @@ class PackageDetailDto
      * @var string
      */
     private string $name;
+
     /**
      * @var int
      */
     private int $data;
+
     /**
      * @var string
      */
     private string $dataUnit;
+
     /**
      * @var int
      */
     private int $duration;
+
     /**
      * @var string
      */
     private string $durationUnit;
+
     /**
      * @var string
      */
     private string $footprintCode;
+
     /**
      * @var string
      */
     private string $footprintType;
+
     /**
      * @var string
      */
     private string $provider;
+
     /**
      * @var string
      */
     private string $code;
+
     /**
      * @var Price
      */
     private Price $price;
+
     /**
      * @var string|null
      */
     private ?string $lastActivationDate;
+
     /**
      * @var bool
      */
     private bool $isRecurring;
+
     /**
      * @var int
      */
     private int $trialData;
+
     /**
      * @var string
      */
     private string $trialDataUnit;
+
     /**
      * @var string
      */
     private string $trialDuration;
+
     /**
      * @var string
      */
     private string $trialDurationUnit;
+
     /**
      * @var string
      */
     private string $trialHlrBitRate;
 
-    /**
-     * @return static
-     */
     public static function builder(): static
     {
         return new static();
@@ -94,9 +108,9 @@ class PackageDetailDto
 
     /**
      * @param string $name
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setName(string $name): self
+    public function setName(string $name): PackageDetailDto
     {
         $this->name = $name;
         return $this;
@@ -112,9 +126,9 @@ class PackageDetailDto
 
     /**
      * @param int $data
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setData(int $data): self
+    public function setData(int $data): PackageDetailDto
     {
         $this->data = $data;
         return $this;
@@ -130,9 +144,9 @@ class PackageDetailDto
 
     /**
      * @param string $dataUnit
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setDataUnit(string $dataUnit): self
+    public function setDataUnit(string $dataUnit): PackageDetailDto
     {
         $this->dataUnit = $dataUnit;
         return $this;
@@ -148,9 +162,9 @@ class PackageDetailDto
 
     /**
      * @param int $duration
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setDuration(int $duration): self
+    public function setDuration(int $duration): PackageDetailDto
     {
         $this->duration = $duration;
         return $this;
@@ -166,9 +180,9 @@ class PackageDetailDto
 
     /**
      * @param string $durationUnit
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setDurationUnit(string $durationUnit): self
+    public function setDurationUnit(string $durationUnit): PackageDetailDto
     {
         $this->durationUnit = $durationUnit;
         return $this;
@@ -184,9 +198,9 @@ class PackageDetailDto
 
     /**
      * @param string $footprintCode
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setFootprintCode(string $footprintCode): self
+    public function setFootprintCode(string $footprintCode): PackageDetailDto
     {
         $this->footprintCode = $footprintCode;
         return $this;
@@ -202,9 +216,9 @@ class PackageDetailDto
 
     /**
      * @param string $footprintType
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setFootprintType(string $footprintType): self
+    public function setFootprintType(string $footprintType): PackageDetailDto
     {
         $this->footprintType = $footprintType;
         return $this;
@@ -220,9 +234,9 @@ class PackageDetailDto
 
     /**
      * @param string $provider
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setProvider(string $provider): self
+    public function setProvider(string $provider): PackageDetailDto
     {
         $this->provider = $provider;
         return $this;
@@ -238,9 +252,9 @@ class PackageDetailDto
 
     /**
      * @param string $code
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setCode(string $code): self
+    public function setCode(string $code): PackageDetailDto
     {
         $this->code = $code;
         return $this;
@@ -256,9 +270,9 @@ class PackageDetailDto
 
     /**
      * @param Price $price
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setPrice(Price $price): self
+    public function setPrice(Price $price): PackageDetailDto
     {
         $this->price = $price;
         return $this;
@@ -274,9 +288,9 @@ class PackageDetailDto
 
     /**
      * @param string|null $lastActivationDate
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setLastActivationDate(?string $lastActivationDate): self
+    public function setLastActivationDate(?string $lastActivationDate): PackageDetailDto
     {
         $this->lastActivationDate = $lastActivationDate;
         return $this;
@@ -292,9 +306,9 @@ class PackageDetailDto
 
     /**
      * @param bool $isRecurring
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setIsRecurring(bool $isRecurring): self
+    public function setIsRecurring(bool $isRecurring): PackageDetailDto
     {
         $this->isRecurring = $isRecurring;
         return $this;
@@ -310,9 +324,9 @@ class PackageDetailDto
 
     /**
      * @param int $trialData
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setTrialData(int $trialData): self
+    public function setTrialData(int $trialData): PackageDetailDto
     {
         $this->trialData = $trialData;
         return $this;
@@ -328,9 +342,9 @@ class PackageDetailDto
 
     /**
      * @param string $trialDataUnit
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setTrialDataUnit(string $trialDataUnit): self
+    public function setTrialDataUnit(string $trialDataUnit): PackageDetailDto
     {
         $this->trialDataUnit = $trialDataUnit;
         return $this;
@@ -346,9 +360,9 @@ class PackageDetailDto
 
     /**
      * @param string $trialDuration
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setTrialDuration(string $trialDuration): self
+    public function setTrialDuration(string $trialDuration): PackageDetailDto
     {
         $this->trialDuration = $trialDuration;
         return $this;
@@ -364,9 +378,9 @@ class PackageDetailDto
 
     /**
      * @param string $trialDurationUnit
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setTrialDurationUnit(string $trialDurationUnit): self
+    public function setTrialDurationUnit(string $trialDurationUnit): PackageDetailDto
     {
         $this->trialDurationUnit = $trialDurationUnit;
         return $this;
@@ -382,13 +396,11 @@ class PackageDetailDto
 
     /**
      * @param string $trialHlrBitRate
-     * @return $this
+     * @return PackageDetailDto
      */
-    public function setTrialHlrBitRate(string $trialHlrBitRate): self
+    public function setTrialHlrBitRate(string $trialHlrBitRate): PackageDetailDto
     {
         $this->trialHlrBitRate = $trialHlrBitRate;
         return $this;
     }
-
-
 }
