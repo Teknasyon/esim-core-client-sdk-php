@@ -12,12 +12,6 @@ class CurrentSimPackageRequest extends BaseRequest
      */
     private string $trackingNumber;
 
-    /**
-     * @var array|null
-     * @example ['customParameter1' => 'customValue1', 'customParameter2' => 'customValue2']
-     */
-    private ?array $customParams;
-
     public static function builder(): static
     {
         return new static();
@@ -38,24 +32,6 @@ class CurrentSimPackageRequest extends BaseRequest
     public function setTrackingNumber(string $trackingNumber): CurrentSimPackageRequest
     {
         $this->trackingNumber = $trackingNumber;
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getCustomParams(): ?array
-    {
-        return $this->customParams;
-    }
-
-    /**
-     * @param array|null $customParams
-     * @return CurrentSimPackageRequest
-     */
-    public function setCustomParams(?array $customParams): CurrentSimPackageRequest
-    {
-        $this->customParams = $customParams;
         return $this;
     }
 }
