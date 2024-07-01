@@ -4,26 +4,28 @@ namespace eSIM\eSIMCoreClient\Service;
 
 use eSIM\eSIMCoreClient\Dto\Request\ActivateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceDetailRequest;
-use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
-use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
 use eSIM\eSIMCoreClient\Dto\Request\BalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Request\BaseRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CreateOrderRequest;
+use eSIM\eSIMCoreClient\Dto\Request\CurrentSimPackageRequest;
+use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
-use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberBalanceRequest;
+use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDetailDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDto;
 use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDto;
 use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
+use eSIM\eSIMCoreClient\Dto\Response\SimPackage\CurrentSimPackageDto;
 use eSIM\eSIMCoreClient\Enum\Headers;
 use eSIM\eSIMCoreClient\Exception\ClientException;
 use eSIM\eSIMCoreClient\Exception\CoreSignatureError;
-use eSIM\eSIMCoreClient\Dto\Request\CancelOrderRequest;
-use eSIM\eSIMCoreClient\Dto\Request\OrderStatusCheckBulkRequest;
 use eSIM\eSIMCoreClient\Exception\ResourceNotFoundException;
 use eSIM\eSIMCoreClient\Helper\SignatureHelper;
 use eSIM\eSIMCoreClient\Mapper\Order\BalanceDetailDtoMapper;
@@ -32,6 +34,7 @@ use eSIM\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\SimPackage\CurrentSimPackageDtoMapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -53,6 +56,7 @@ class eSIMCoreService
     const CANCEL_ROUTE = '/order/%s/cancel';
     const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
     const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
+    const SIM_PACKAGE_CURRENT_ROUTE = 'sim-package/%s/current';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -79,6 +83,7 @@ class eSIMCoreService
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()),
@@ -86,17 +91,14 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             $packagesResult = $response->toArray()['result']['packages'] ?? [];
             $packages = [];
-
             if (!empty($packagesResult)) {
                 foreach ($packagesResult as $package) {
                     $packages[] = PackageDtoMapper::map($package);
                 }
                 unset($packagesResult);
             }
-
             return $packages;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -118,6 +120,7 @@ class eSIMCoreService
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 self::PACKAGE_GROUPS_ROUTE,
@@ -125,17 +128,14 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             $packageGroupsResult = $response->toArray()['result']['packageGroups'] ?? [];
             $packageGroups = [];
-
             if (!empty($packageGroupsResult)) {
                 foreach ($packageGroupsResult as $packageGroup) {
                     $packageGroups[] = PackageGroupDtoMapper::map($packageGroup);
                 }
                 unset($packageGroupsResult);
             }
-
             return $packageGroups;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -157,6 +157,7 @@ class eSIMCoreService
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_GET,
                 sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()),
@@ -164,7 +165,6 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             $packagesDetailsResult = $response->toArray()['result']['packageDetails'] ?? null;
             if (empty($packagesDetailsResult)) {
                 throw new ResourceNotFoundException();
@@ -198,6 +198,7 @@ class eSIMCoreService
                 ->setPayload($payload);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::CREATE_ORDER_ROUTE,
@@ -206,7 +207,6 @@ class eSIMCoreService
                     'json' => $payload
                 ]
             );
-
             $createOrderResult = $response->toArray()['result'] ?? null;
             if (empty($createOrderResult)) {
                 throw new ResourceNotFoundException();
@@ -240,15 +240,12 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             $balanceResult = $response->toArray()['result'] ?? [];
             $balance = null;
-
             if (!empty($balanceResult)) {
                 $balance = BalanceDtoMapper::map($balanceResult);
                 unset($balanceResult);
             }
-
             return $balance;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -268,6 +265,7 @@ class eSIMCoreService
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_PATCH,
                 sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()),
@@ -275,7 +273,6 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             return $response->getStatusCode() == 204;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -302,6 +299,7 @@ class eSIMCoreService
                 ->setPayload($payload);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()),
@@ -310,7 +308,6 @@ class eSIMCoreService
                     'json' => $payload
                 ]
             );
-
             return $response->getStatusCode() == 204;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -336,6 +333,7 @@ class eSIMCoreService
                 ->setPayload($payload);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::ORDER_STATUS_CHECK_BULK_ROUTE,
@@ -344,7 +342,6 @@ class eSIMCoreService
                     'json' => $payload
                 ]
             );
-
             return $response->getStatusCode() == 200;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -364,6 +361,7 @@ class eSIMCoreService
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_PATCH,
                 sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()),
@@ -371,7 +369,6 @@ class eSIMCoreService
                     'headers' => $headers,
                 ]
             );
-
             return $response->getStatusCode() == 204;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -399,6 +396,7 @@ class eSIMCoreService
                 ->setPayload($payload);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
             $response = $this->eSIMCoreClient->request(
                 Request::METHOD_POST,
                 self::SUBSCRIBER_UPDATE_ROUTE,
@@ -407,7 +405,6 @@ class eSIMCoreService
                     'json' => $payload
                 ]
             );
-
             return $response->getStatusCode() == 200;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
@@ -437,19 +434,67 @@ class eSIMCoreService
                     'headers' => $headers
                 ]
             );
-
             $balanceDetailResult = $response->toArray()['result'] ?? [];
             $balanceDetail = null;
-
             if (!empty($balanceDetailResult)) {
                 $balanceDetail = BalanceDetailDtoMapper::map($balanceDetailResult);
                 unset($balanceDetailResult);
             }
-
             return $balanceDetail;
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
+    }
+
+    /**
+     * @param CurrentSimPackageRequest $currentSimPackageRequest
+     * @return CurrentSimPackageDto|null
+     * @throws ClientException
+     */
+    public function getCurrentSimPackage(CurrentSimPackageRequest $currentSimPackageRequest): ?CurrentSimPackageDto
+    {
+        try {
+            $headers = $this->getHeaders($currentSimPackageRequest);
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()))
+                ->setHeaders($headers);
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_GET,
+                sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()),
+                [
+                    'headers' => $headers,
+                ]
+            );
+            $currentSimPackageResponse = $response->toArray()['result'] ?? [];
+            $currentSimPackage = null;
+            if (!empty($currentSimPackageResponse)) {
+                $currentSimPackage = CurrentSimPackageDtoMapper::map($currentSimPackageResponse);
+                unset($currentSimPackageResponse);
+            }
+            return $currentSimPackage;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    private function getHeaders(BaseRequest $request): array
+    {
+        $headers = [
+            Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
+            Headers::CLIENT_COUNTRY->value => $request->getCountry(),
+            Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
+            Headers::CLIENT_IP->value => $request->getIp(),
+            Headers::CORRELATION_ID->value => $request->getCorrelationId() ?? '',
+            Headers::CLIENT_TIMEZONE->value => $request->getTimezone() ?? '',
+            Headers::TOKEN->value => $this->apiKey,
+        ];
+        if (!is_null($request->getCurrency())) {
+            $headers[Headers::CURRENCY->value] = $request->getCurrency();
+        }
+        return $headers;
     }
 
     /**
@@ -470,23 +515,5 @@ class eSIMCoreService
         ) {
             throw new CoreSignatureError('Signature not match: ' . $signature . ', Calculate Signature: ' . $calculateSignature);
         }
-    }
-
-    private function getHeaders(BaseRequest $request): array
-    {
-        $headers = [
-            Headers::CONTENT_TYPE->value => self::CONTENT_TYPE,
-            Headers::CLIENT_COUNTRY->value => $request->getCountry(),
-            Headers::CLIENT_LANGUAGE->value => $request->getLanguage(),
-            Headers::CLIENT_IP->value => $request->getIp(),
-            Headers::CORRELATION_ID->value => $request->getCorrelationId() ?? '',
-            Headers::CLIENT_TIMEZONE->value => $request->getTimezone() ?? '',
-            Headers::TOKEN->value => $this->apiKey,
-        ];
-
-        if (!is_null($request->getCurrency())) {
-            $headers[Headers::CURRENCY->value] = $request->getCurrency();
-        }
-        return $headers;
     }
 }
