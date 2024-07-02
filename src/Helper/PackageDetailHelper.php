@@ -33,6 +33,11 @@ class PackageDetailHelper
                 ->setTrialDataUnit($package['trialDataUnit'])
                 ->setTrialDuration($package['trialDuration'])
                 ->setTrialDurationUnit($package['trialDurationUnit'])
-                ->setTrialHlrBitRate($package['trialHlrBitRate']);
+                ->setTrialHlrBitRate($package['trialHlrBitRate'])
+                ->setGraceData($package['graceData'])
+                ->setGraceDataUnit($package['graceDataUnit'])
+                ->setGraceDuration($package['graceDuration'])
+                ->setGraceDurationUnit($package['graceDurationUnit'])
+                ->setGraceHlrBitRate($package['graceHlrBitRate']);
     }
 }

@@ -15,6 +15,10 @@ class CurrentSimPackageDto
      * @var string
      */
     private string $status;
+    /**
+     * @var string
+     */
+    private string $type;
 
     /**
      * @var string
@@ -174,4 +178,16 @@ class CurrentSimPackageDto
         $this->packageDetail = $packageDetail;
         return $this;
     }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
 }
