@@ -19,6 +19,11 @@ class CurrentSimPackageDto
     /**
      * @var string
      */
+    private string $type;
+
+    /**
+     * @var string
+     */
     private string $activatedDate;
 
     /**
@@ -172,6 +177,24 @@ class CurrentSimPackageDto
     public function setPackageDetail(PackageDetailDto $packageDetail): CurrentSimPackageDto
     {
         $this->packageDetail = $packageDetail;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return CurrentSimPackageDto
+     */
+    public function setType(string $type): CurrentSimPackageDto
+    {
+        $this->type = $type;
         return $this;
     }
 }

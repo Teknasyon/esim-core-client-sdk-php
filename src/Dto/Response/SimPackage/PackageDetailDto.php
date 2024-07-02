@@ -79,9 +79,9 @@ class PackageDetailDto
     private string $trialDataUnit;
 
     /**
-     * @var string
+     * @var int
      */
-    private string $trialDuration;
+    private int $trialDuration;
 
     /**
      * @var string
@@ -92,6 +92,31 @@ class PackageDetailDto
      * @var string
      */
     private string $trialHlrBitRate;
+
+    /**
+     * @var int
+     */
+    private int $graceData;
+
+    /**
+     * @var string
+     */
+    private string $graceDataUnit;
+
+    /**
+     * @var int
+     */
+    private int $graceDuration;
+
+    /**
+     * @var string
+     */
+    private string $graceDurationUnit;
+
+    /**
+     * @var string
+     */
+    private string $graceHlrBitRate;
 
     public static function builder(): static
     {
@@ -351,18 +376,18 @@ class PackageDetailDto
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getTrialDuration(): string
+    public function getTrialDuration(): int
     {
         return $this->trialDuration;
     }
 
     /**
-     * @param string $trialDuration
+     * @param int $trialDuration
      * @return PackageDetailDto
      */
-    public function setTrialDuration(string $trialDuration): PackageDetailDto
+    public function setTrialDuration(int $trialDuration): PackageDetailDto
     {
         $this->trialDuration = $trialDuration;
         return $this;
@@ -401,6 +426,96 @@ class PackageDetailDto
     public function setTrialHlrBitRate(string $trialHlrBitRate): PackageDetailDto
     {
         $this->trialHlrBitRate = $trialHlrBitRate;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGraceData(): int
+    {
+        return $this->graceData;
+    }
+
+    /**
+     * @param int $graceData
+     * @return self
+     */
+    public function setGraceData(int $graceData): self
+    {
+        $this->graceData = $graceData;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGraceDataUnit(): string
+    {
+        return $this->graceDataUnit;
+    }
+
+    /**
+     * @param string $graceDataUnit
+     * @return self
+     */
+    public function setGraceDataUnit(string $graceDataUnit): self
+    {
+        $this->graceDataUnit = $graceDataUnit;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGraceDuration(): int
+    {
+        return $this->graceDuration;
+    }
+
+    /**
+     * @param int $graceDuration
+     * @return self
+     */
+    public function setGraceDuration(int $graceDuration): self
+    {
+        $this->graceDuration = $graceDuration;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGraceDurationUnit(): string
+    {
+        return $this->graceDurationUnit;
+    }
+
+    /**
+     * @param string $graceDurationUnit
+     * @return self
+     */
+    public function setGraceDurationUnit(string $graceDurationUnit): self
+    {
+        $this->graceDurationUnit = $graceDurationUnit;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGraceHlrBitRate(): string
+    {
+        return $this->graceHlrBitRate;
+    }
+
+    /**
+     * @param string $graceHlrBitRate
+     * @return self
+     */
+    public function setGraceHlrBitRate(string $graceHlrBitRate): self
+    {
+        $this->graceHlrBitRate = $graceHlrBitRate;
         return $this;
     }
 }
