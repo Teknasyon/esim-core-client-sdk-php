@@ -15,6 +15,7 @@ class CurrentSimPackageDto
      * @var string
      */
     private string $status;
+
     /**
      * @var string
      */
@@ -179,15 +180,21 @@ class CurrentSimPackageDto
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType(string $type): self
+    /**
+     * @param string $type
+     * @return CurrentSimPackageDto
+     */
+    public function setType(string $type): CurrentSimPackageDto
     {
         $this->type = $type;
         return $this;
     }
-
 }

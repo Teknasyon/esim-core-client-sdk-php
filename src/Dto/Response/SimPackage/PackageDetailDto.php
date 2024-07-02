@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
@@ -517,5 +518,4 @@ class PackageDetailDto
         $this->graceHlrBitRate = $graceHlrBitRate;
         return $this;
     }
-
 }
