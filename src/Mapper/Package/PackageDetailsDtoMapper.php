@@ -21,17 +21,23 @@ class PackageDetailsDtoMapper
             ->setProvider($packageDetails['provider'])
             ->setCode($packageDetails['code'])
             ->setLastActivationDate($packageDetails['lastActivationDate'])
+            ->setIsRecurring($packageDetails['isRecurring'])
+            ->setTrialData($packageDetails['trialData'])
+            ->setTrialDataUnit($packageDetails['trialDataUnit'])
+            ->setTrialDuration($packageDetails['trialDuration'])
+            ->setTrialDurationUnit($packageDetails['trialDurationUnit'])
+            ->setTrialHlrBitRate($packageDetails['trialHlrBitRate'] ? HLRBitRate::from($packageDetails['trialHlrBitRate']) : null)
             ->setPrice(PriceHelper::createPriceSchema(
                 $packageDetails['price']['price'],
                 $packageDetails['price']['currency'],
                 $packageDetails['price']['priceText'],
                 $packageDetails['price']['currencySymbol']
             ))
-            ->setIsRecurring($packageDetails['isRecurring'])
-            ->setTrialData($packageDetails['trialData'])
-            ->setTrialDataUnit($packageDetails['trialDataUnit'])
-            ->setTrialDuration($packageDetails['trialDuration'])
-            ->setTrialDurationUnit($packageDetails['trialDurationUnit'])
-            ->setTrialHlrBitRate($packageDetails['trialHlrBitRate'] ? HLRBitRate::from($packageDetails['trialHlrBitRate']) : null);
-    }
+            ->setTrialPrice($packageDetails['trialPrice'] ?? PriceHelper::createPriceSchema(
+                $packageDetails['trialPrice']['price'],
+                $packageDetails['trialPrice']['currency'],
+                $packageDetails['trialPrice']['priceText'],
+                $packageDetails['trialPrice']['currencySymbol']
+            ));
+   }
 }

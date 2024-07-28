@@ -37,6 +37,11 @@ class CurrentSimPackageDto
     private string $expiredDate;
 
     /**
+     * @var string|null
+     */
+    private ?string $updatedDate;
+
+    /**
      * @var SimDetailDto
      */
     private SimDetailDto $simDetail;
@@ -141,6 +146,24 @@ class CurrentSimPackageDto
     public function setExpiredDate(string $expiredDate): self
     {
         $this->expiredDate = $expiredDate;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUpdatedDate(): ?string
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * @param string|null $updatedDate
+     * @return CurrentSimPackageDto
+     */
+    public function setUpdatedDate(?string $updatedDate): CurrentSimPackageDto
+    {
+        $this->updatedDate = $updatedDate;
         return $this;
     }
 

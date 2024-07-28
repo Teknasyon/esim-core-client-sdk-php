@@ -21,17 +21,23 @@ class PackageDtoMapper
             ->setFootprintType($package['footprintType'])
             ->setProvider($package['provider'])
             ->setCode($package['code'])
+            ->setIsRecurring($package['isRecurring'])
+            ->setTrialData($package['trialData'])
+            ->setTrialDataUnit($package['trialDataUnit'])
+            ->setTrialDuration($package['trialDuration'])
+            ->setTrialDurationUnit($package['trialDurationUnit'])
+            ->setTrialHlrBitRate($package['trialHlrBitRate'] ? HLRBitRate::from($package['trialHlrBitRate']) : null)
             ->setPrice(PriceHelper::createPriceSchema(
                 $package['price']['price'],
                 $package['price']['currency'],
                 $package['price']['priceText'],
                 $package['price']['currencySymbol']
             ))
-            ->setIsRecurring($package['isRecurring'])
-            ->setTrialData($package['trialData'])
-            ->setTrialDataUnit($package['trialDataUnit'])
-            ->setTrialDuration($package['trialDuration'])
-            ->setTrialDurationUnit($package['trialDurationUnit'])
-            ->setTrialHlrBitRate($package['trialHlrBitRate'] ? HLRBitRate::from($package['trialHlrBitRate']) : null);
+            ->setTrialPrice($package['trialPrice'] ?? PriceHelper::createPriceSchema(
+                $package['trialPrice']['price'],
+                $package['trialPrice']['currency'],
+                $package['trialPrice']['priceText'],
+                $package['trialPrice']['currencySymbol']
+            ));
     }
 }
