@@ -33,11 +33,12 @@ class PackageDtoMapper
                 $package['price']['priceText'],
                 $package['price']['currencySymbol']
             ))
-            ->setTrialPrice($package['trialPrice'] ?? PriceHelper::createPriceSchema(
-                $package['trialPrice']['price'],
-                $package['trialPrice']['currency'],
-                $package['trialPrice']['priceText'],
-                $package['trialPrice']['currencySymbol']
-            ));
+            ->setTrialPrice($package['trialPrice'] ?
+                PriceHelper::createPriceSchema(
+                    $package['trialPrice']['price'],
+                    $package['trialPrice']['currency'],
+                    $package['trialPrice']['priceText'],
+                    $package['trialPrice']['currencySymbol']
+                ) : null);
     }
 }
