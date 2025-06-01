@@ -21,6 +21,7 @@ class PackageDetailsDto
     private Price $price;
     private ?string $lastActivationDate;
     private bool $isRecurring = false;
+    private ?Price $trialPrice = null;
     private ?int $trialData = null;
     private ?string $trialDataUnit = null;
     private ?string $trialDuration = null;
@@ -245,6 +246,24 @@ class PackageDetailsDto
     public function setIsRecurring(bool $isRecurring): PackageDetailsDto
     {
         $this->isRecurring = $isRecurring;
+        return $this;
+    }
+
+    /**
+     * @return Price|null
+     */
+    public function getTrialPrice(): ?Price
+    {
+        return $this->trialPrice;
+    }
+
+    /**
+     * @param Price|null $trialPrice
+     * @return PackageDetailsDto
+     */
+    public function setTrialPrice(?Price $trialPrice): PackageDetailsDto
+    {
+        $this->trialPrice = $trialPrice;
         return $this;
     }
 

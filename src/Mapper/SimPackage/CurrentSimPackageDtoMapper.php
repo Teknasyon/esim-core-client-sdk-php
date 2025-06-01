@@ -8,15 +8,21 @@ use eSIM\eSIMCoreClient\Helper\SimDetailHelper;
 
 class CurrentSimPackageDtoMapper
 {
+    /**
+     * @param array $currentSimPackage
+     * @return CurrentSimPackageDto
+     */
     public static function map(array $currentSimPackage): CurrentSimPackageDto
     {
         return CurrentSimPackageDto::builder()
+            ->setType($currentSimPackage['type'])
             ->setDataUsage($currentSimPackage['dataUsage'])
             ->setStatus($currentSimPackage['status'])
+            ->setActivatedDate($currentSimPackage['activatedDate'])
             ->setEndDate($currentSimPackage['endDate'])
             ->setExpiredDate($currentSimPackage['expiredDate'])
+            ->setUpdatedDate($currentSimPackage['updatedDate'])
             ->setSimDetail(SimDetailHelper::createSimDetailSchema($currentSimPackage['simDetail']))
-            ->setActivatedDate( $currentSimPackage['activatedDate'])
             ->setPackageDetail(PackageDetailHelper::createPackageDetailSchema($currentSimPackage['packageDetail']));
     }
 }

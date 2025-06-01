@@ -1,9 +1,7 @@
 <?php
-
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Response\SimPackage;
-
 class CurrentSimPackageDto
 {
     /**
@@ -19,6 +17,11 @@ class CurrentSimPackageDto
     /**
      * @var string
      */
+    private string $type;
+
+    /**
+     * @var string
+     */
     private string $activatedDate;
 
     /**
@@ -30,6 +33,11 @@ class CurrentSimPackageDto
      * @var string
      */
     private string $expiredDate;
+
+    /**
+     * @var string|null
+     */
+    private ?string $updatedDate;
 
     /**
      * @var SimDetailDto
@@ -140,6 +148,24 @@ class CurrentSimPackageDto
     }
 
     /**
+     * @return string|null
+     */
+    public function getUpdatedDate(): ?string
+    {
+        return $this->updatedDate;
+    }
+
+    /**
+     * @param string|null $updatedDate
+     * @return CurrentSimPackageDto
+     */
+    public function setUpdatedDate(?string $updatedDate): CurrentSimPackageDto
+    {
+        $this->updatedDate = $updatedDate;
+        return $this;
+    }
+
+    /**
      * @return SimDetailDto
      */
     public function getSimDetail(): SimDetailDto
@@ -172,6 +198,24 @@ class CurrentSimPackageDto
     public function setPackageDetail(PackageDetailDto $packageDetail): CurrentSimPackageDto
     {
         $this->packageDetail = $packageDetail;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return CurrentSimPackageDto
+     */
+    public function setType(string $type): CurrentSimPackageDto
+    {
+        $this->type = $type;
         return $this;
     }
 }
