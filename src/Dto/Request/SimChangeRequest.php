@@ -2,15 +2,13 @@
 declare(strict_types=1);
 
 namespace eSIM\eSIMCoreClient\Dto\Request;
-/**
- *
- */
 class SimChangeRequest extends BaseRequest
 {
-    public static function build(): self
+    public static function builder(): self
     {
         return new self();
     }
+
     /**
      * @var string
      */
@@ -55,5 +53,4 @@ class SimChangeRequest extends BaseRequest
         $this->subscriberId = $subscriberId;
         return $this;
     }
-
 }

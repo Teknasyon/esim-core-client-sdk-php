@@ -1,11 +1,8 @@
 <?php
 
 namespace eSIM\eSIMCoreClient\Dto\Response\Sim;
-
-
 class SimDetailDto
 {
-
     /**
      * @var string
      */
@@ -45,6 +42,7 @@ class SimDetailDto
      * @var bool
      */
     private bool $isOneSim = false;
+
     /**
      * @var float
      */
@@ -209,5 +207,4 @@ class SimDetailDto
         $this->balance = $balance;
         return $this;
     }
-
 }
