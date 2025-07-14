@@ -14,6 +14,7 @@ use eSIM\eSIMCoreClient\Dto\Request\PackageDetailsByPackageCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
+use eSIM\eSIMCoreClient\Dto\Request\SimChangeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberBalanceRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDetailDto;
@@ -22,6 +23,7 @@ use eSIM\eSIMCoreClient\Dto\Response\Order\OrderDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDetailsDto;
 use eSIM\eSIMCoreClient\Dto\Response\Package\PackageDto;
 use eSIM\eSIMCoreClient\Dto\Response\PackageGroup\PackageGroupDto;
+use eSIM\eSIMCoreClient\Dto\Response\Sim\SimDto;
 use eSIM\eSIMCoreClient\Dto\Response\SimPackage\CurrentSimPackageDto;
 use eSIM\eSIMCoreClient\Enum\Headers;
 use eSIM\eSIMCoreClient\Exception\ClientException;
@@ -34,6 +36,7 @@ use eSIM\eSIMCoreClient\Mapper\Package\BalanceDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
+use eSIM\eSIMCoreClient\Mapper\Sim\SimMapper;
 use eSIM\eSIMCoreClient\Mapper\SimPackage\CurrentSimPackageDtoMapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -57,6 +60,7 @@ class eSIMCoreService
     const SUBSCRIBER_UPDATE_ROUTE = '/account/webhook/subscriber-update';
     const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
     const SIM_PACKAGE_CURRENT_ROUTE = '/sim-package/%s/current';
+    const SIM_CHANGE_ROUTE = '/sim/change';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -514,6 +518,48 @@ class eSIMCoreService
             )
         ) {
             throw new CoreSignatureError('Signature not match: ' . $signature . ', Calculate Signature: ' . $calculateSignature);
+        }
+    }
+
+    /**
+     * @param SimChangeRequest $simChangeRequest
+     * @return SimDto
+     * @throws ClientException
+     */
+    public function postSimChange(SimChangeRequest $simChangeRequest): SimDto
+    {
+        try {
+            $headers = $this->getHeaders($simChangeRequest);
+
+            $payload = [
+                'iccid' => $simChangeRequest->getIccid(),
+                'subscriberId' => $simChangeRequest->getSubscriberId()
+            ];
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::SIM_CHANGE_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                self::SIM_CHANGE_ROUTE,
+                [
+                    'headers' => $headers,
+                    'json' => $payload
+                ]
+            );
+            $simResponse = $response->toArray()['result'] ?? [];
+            $simDto = null;
+            if (!empty($simResponse)) {
+                $simDto = SimMapper::map($simResponse);
+                unset($simResponse);
+            }
+            return $simDto;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
         }
     }
 }
