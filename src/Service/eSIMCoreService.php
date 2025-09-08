@@ -15,6 +15,7 @@ use eSIM\eSIMCoreClient\Dto\Request\PackageGroupsRequest;
 use eSIM\eSIMCoreClient\Dto\Request\PackagesByFootprintCodeRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SignatureDto;
 use eSIM\eSIMCoreClient\Dto\Request\SimChangeRequest;
+use eSIM\eSIMCoreClient\Dto\Request\SimDataUsageRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberBalanceRequest;
 use eSIM\eSIMCoreClient\Dto\Request\SubscriberUpdateRequest;
 use eSIM\eSIMCoreClient\Dto\Response\Order\BalanceDetailDto;
@@ -37,6 +38,7 @@ use eSIM\eSIMCoreClient\Mapper\Package\PackageDetailsDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Package\PackageDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\PackageGroup\PackageGroupDtoMapper;
 use eSIM\eSIMCoreClient\Mapper\Sim\SimMapper;
+use eSIM\eSIMCoreClient\Mapper\Sim\SimTotalDataUsageMapper;
 use eSIM\eSIMCoreClient\Mapper\SimPackage\CurrentSimPackageDtoMapper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -61,6 +63,7 @@ class eSIMCoreService
     const SUBSCRIBER_BALANCE_ROUTE = '/subscriber/%s/balance';
     const SIM_PACKAGE_CURRENT_ROUTE = '/sim-package/%s/current';
     const SIM_CHANGE_ROUTE = '/sim/change';
+    const SIM_DATA_USAGE_ROUTE = '/sim/%s/data-usage';
     const CONTENT_TYPE = 'application/json';
 
     public function __construct(
@@ -558,6 +561,53 @@ class eSIMCoreService
                 unset($simResponse);
             }
             return $simDto;
+        } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
+            throw new ClientException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws ClientException
+     */
+    public function postSimDataUsage(SimDataUsageRequest $simDataUsageRequest): array
+    {
+        try {
+            $headers = $this->getHeaders($simDataUsageRequest);
+
+            $payload = [
+                'iccid' => $simDataUsageRequest->getIccid(),
+                'startDate' => $simDataUsageRequest->getStartDate(),
+                'endDate' => $simDataUsageRequest->getEndDate(),
+            ];
+
+            $signatureDto = SignatureDto::builder()
+                ->setUrl($this->baseUri . self::SIM_DATA_USAGE_ROUTE)
+                ->setHeaders($headers)
+                ->setPayload($payload);
+
+            $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
+
+            $response = $this->eSIMCoreClient->request(
+                Request::METHOD_POST,
+                self::SIM_DATA_USAGE_ROUTE,
+                [
+                    'headers' => $headers,
+                    'json' => $payload
+                ]
+            );
+            $simDataUsageResponse = $response->toArray()['result'] ?? [];
+            $simDataUsageDto = [];
+            if (!empty($simDataUsageResponse)) {
+                foreach ($simDataUsageResponse as $simDataUsage) {
+                    $simDataUsageDto[] = SimTotalDataUsageMapper::map(
+                        totalDataUsage: $simDataUsage['totalDataUsage'] ?? '0',
+                        totalCost: $simDataUsage['totalCost'] ?? '0',
+                        countryCode: $simDataUsage['countryCode'] ?? ''
+                    );
+                }
+                unset($simDataUsageResponse);
+            }
+            return $simDataUsageDto;
         } catch (ResourceNotFoundException|ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $exception) {
             throw new ClientException($exception->getMessage(), $exception->getCode());
         }
