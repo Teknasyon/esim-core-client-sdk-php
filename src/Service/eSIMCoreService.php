@@ -83,7 +83,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($packagesByFootprintCodeRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()))
+                ->setUrl(sprintf(self::PACKAGES_BY_FOOTPRINT_CODE_ROUTE, $packagesByFootprintCodeRequest->getFootprintCode()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -120,7 +120,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($packageGroupsRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::PACKAGE_GROUPS_ROUTE)
+                ->setUrl(self::PACKAGE_GROUPS_ROUTE)
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -157,7 +157,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($packageDetailsByPackageCodeRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()))
+                ->setUrl(sprintf(self::PACKAGES_DETAILS_BY_CODE_ROUTE, $packageDetailsByPackageCodeRequest->getPackageCode()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -197,7 +197,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::CREATE_ORDER_ROUTE)
+                ->setUrl(self::CREATE_ORDER_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
@@ -232,7 +232,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($balanceRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::BALANCE_ROUTE, $balanceRequest->getTrackingNumber()))
+                ->setUrl(sprintf(self::BALANCE_ROUTE, $balanceRequest->getTrackingNumber()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -265,7 +265,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($activateOrderRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()))
+                ->setUrl(sprintf(self::ACTIVATE_ROUTE, $activateOrderRequest->getTrackingNumber()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -298,7 +298,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()))
+                ->setUrl(sprintf(self::SUBSCRIBER_BALANCE_ROUTE, $subscriberBalanceRequest->getOpaqueId()))
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
@@ -332,7 +332,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::ORDER_STATUS_CHECK_BULK_ROUTE)
+                ->setUrl(self::ORDER_STATUS_CHECK_BULK_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
@@ -361,7 +361,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($cancelOrderRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()))
+                ->setUrl(sprintf(self::CANCEL_ROUTE, $cancelOrderRequest->getTrackingNumber()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -395,7 +395,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::SUBSCRIBER_UPDATE_ROUTE)
+                ->setUrl(self::SUBSCRIBER_UPDATE_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
@@ -426,7 +426,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($balanceDetailRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()))
+                ->setUrl(sprintf(self::BALANCE_DETAIL_ROUTE, $balanceDetailRequest->getTrackingNumber()))
                 ->setHeaders($headers);
 
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
@@ -461,7 +461,7 @@ class eSIMCoreService
             $headers = $this->getHeaders($currentSimPackageRequest);
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()))
+                ->setUrl(sprintf(self::SIM_PACKAGE_CURRENT_ROUTE, $currentSimPackageRequest->getTrackingNumber()))
                 ->setHeaders($headers);
             $headers[Headers::SIGNATURE->value] = SignatureHelper::calculateSignature($signatureDto->toArray(), $this->secretKey);
 
@@ -537,7 +537,7 @@ class eSIMCoreService
             ];
 
             $signatureDto = SignatureDto::builder()
-                ->setUrl($this->baseUri . self::SIM_CHANGE_ROUTE)
+                ->setUrl(self::SIM_CHANGE_ROUTE)
                 ->setHeaders($headers)
                 ->setPayload($payload);
 
